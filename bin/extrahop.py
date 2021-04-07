@@ -148,17 +148,16 @@ class Input(Script):
             
             # Detections
             if(input_items["collectdetections"] == "1"):
-                ew.log(EventWriter.INFO,"collectdetections")
 
                 # Checkpoint
                 try:
-                    lastid = int(open(checkpointfile+"_detections", "r").read() or 0)
+                    lasttime = int(open(checkpointfile+"_detections", "r").read() or 0)
                 except:
                     ew.log(EventWriter.WARN,"No detections offset found, starting at zero")
-                    lastid = 0
+                    lasttime = 0
 
                 offset = 0
-                nextid = lastid
+                nexttime = lasttime
                 while True:
                     response = session.post(base+'detections/search', data=json.dumps({'offset':offset, 'limit':limit}), verify=verify)
                     if(response.ok):
@@ -167,10 +166,10 @@ class Input(Script):
                         if count == 0:
                             ew.log(EventWriter.WARN,"{} had no events".format(EventWriter.INFO,response.url))
                             break
-                        if(offset == 0):
-                            nextid = events[0]["id"]
+                        if offset == 0:
+                            nexttime = events[0]["start_time"]
                         for event in events:
-                            if event["id"] <= lastid:
+                            if event["start_time"] <= lasttime:
                                 break
                             ew.write_event(Event(
                                 time=event["start_time"]/1000,
@@ -191,7 +190,7 @@ class Input(Script):
                         break
                 
                 ew.close()
-                open(checkpointfile+"_detections", "w").write(str(nextid))
+                open(checkpointfile+"_detections", "w").write(str(nexttime))
 
 if __name__ == '__main__':
     exitcode = Input().run(sys.argv)
