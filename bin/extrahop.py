@@ -157,7 +157,6 @@ class Input(Script):
                     lasttime = 0
 
                 offset = 0
-                nexttime = lasttime
                 while True:
                     response = session.post(base+'detections/search', data=json.dumps({'offset':offset, 'limit':limit}), verify=verify)
                     if(response.ok):
@@ -167,7 +166,7 @@ class Input(Script):
                             ew.log(EventWriter.WARN,"{} had no events".format(EventWriter.INFO,response.url))
                             break
                         if offset == 0:
-                            nexttime = events[0]["start_time"]
+                            open(checkpointfile+"_detections", "w").write(str(events[0]["start_time"]))
                         for event in events:
                             if event["start_time"] <= lasttime:
                                 break
@@ -190,8 +189,7 @@ class Input(Script):
                         break
                 
                 ew.close()
-                open(checkpointfile+"_detections", "w").write(str(nexttime))
-
+                
 if __name__ == '__main__':
     exitcode = Input().run(sys.argv)
     sys.exit(exitcode)
