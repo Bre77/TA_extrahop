@@ -165,8 +165,8 @@ class Input(Script):
                         if count == 0:
                             ew.log(EventWriter.WARN,"{} had no events".format(EventWriter.INFO,response.url))
                             break
-                        if offset == 0:
-                            # Save most recent start_time as the offset for next run
+                        if offset == 0 and lasttime < events[0]["start_time"]:
+                            # Save the first start_time as the offset for next run if its different
                             open(checkpointfile+"_detections", "w").write(str(events[0]["start_time"]))
                         for event in events:
                             if event["start_time"] <= lasttime:
