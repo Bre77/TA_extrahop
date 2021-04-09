@@ -175,6 +175,7 @@ class Input(Script):
                             if event["start_time"] <= lasttime:
                                 ew.log(EventWriter.DEBUG,"Found old detection: created {}, updated {}, but checkpoint is {} ".format(event["start_time"],event["update_time"],lasttime))
                                 break
+                            new += 1
                             ew.write_event(Event(
                                 time=event["start_time"]/1000,
                                 host=input_items["server"],
