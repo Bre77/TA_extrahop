@@ -193,7 +193,6 @@ class Input(Script):
                         ew.log(EventWriter.WARN,"{} returned status {}".format(EventWriter.INFO,response.url,response.status_code))
                         ew.log(EventWriter.WARN,response.text)
                         break
-                
                 ew.close()
                 
 if __name__ == '__main__':
