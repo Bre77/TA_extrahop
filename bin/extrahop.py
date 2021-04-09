@@ -190,7 +190,7 @@ class Input(Script):
                         ew.log(EventWriter.INFO,f"Wrote {new} events")
                         break
                     else:
-                        ew.log(EventWriter.WARN,"{} returned status {}".format(EventWriter.INFO,response.url,response.status_code))
+                        ew.log(EventWriter.WARN,f"{response.url} returned status {}".format(,response.url,response.status_code))
                         ew.log(EventWriter.WARN,response.text)
                         break
                 ew.close()
