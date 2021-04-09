@@ -158,6 +158,7 @@ class Input(Script):
 
                 offset = 0
                 while True:
+                    new = 0
                     payload = {'from':lasttime,'offset':offset,'limit':limit,'sort':[{'direction':'desc','field':'start_time'}]}
                     response = session.post(base+'detections/search', data=json.dumps(payload), verify=verify)
                     if(response.ok):
