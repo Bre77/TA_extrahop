@@ -118,7 +118,7 @@ class Input(Script):
                         events = response.json()
                         count = len(events)
                         if count == 0:
-                            ew.log(EventWriter.WARN,"{} had no events".format(EventWriter.INFO,response.url))
+                            ew.log(EventWriter.WARN,f"{response.url} had no events")
                             break
                         if(offset == 0):
                             nextid = events[0]["id"]
