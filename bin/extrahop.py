@@ -171,6 +171,7 @@ class Input(Script):
                             open(checkpointfile+"_detections", "w").write(str(events[0]["start_time"]))
                         for event in events:
                             if event["start_time"] <= lasttime:
+                                ew.log(EventWriter.DEBUG,"Found old detection: created {}, updated {}, but checkpoint is {} ".format(event["start_time"],event["update_time"],lasttime))
                                 break
                             ew.write_event(Event(
                                 time=event["start_time"]/1000,
