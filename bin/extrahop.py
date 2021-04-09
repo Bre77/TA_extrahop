@@ -164,6 +164,7 @@ class Input(Script):
                         events = response.json()
                         count = len(events)
                         if count == 0:
+                            # No events means the offset has gone too far
                             ew.log(EventWriter.WARN,"{} had no events".format(EventWriter.INFO,response.url))
                             break
                         if offset == 0 and events[0]["start_time"] > lasttime:
