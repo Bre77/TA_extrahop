@@ -83,7 +83,7 @@ class Input(Script):
             stored_password = [x for x in self.service.storage_passwords if x.username == item and x.realm == name]
             if input_items[item] == self.MASK:
                 if len(stored_password) != 1:
-                    ew.log(EventWriter.ERROR,"Encrypted {} was not found for {}, reconfigure its value.".format(item,input_name))
+                    ew.log(EventWriter.ERROR,f"Encrypted {item} was not found for {input_name}, reconfigure its value.")
                     return
                 input_items[item] = stored_password[0].content.clear_password
             else:
