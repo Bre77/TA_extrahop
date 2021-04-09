@@ -166,7 +166,7 @@ class Input(Script):
                         count = len(events)
                         if count == 0:
                             # No events means the offset has gone too far
-                            ew.log(EventWriter.WARN,"{} had no events".format(EventWriter.INFO,response.url))
+                            ew.log(EventWriter.WARN,"{} had no events".format(response.url))
                             break
                         if offset == 0 and events[0]["start_time"] > lasttime:
                             # Save the first start_time as the offset for next run if its different
