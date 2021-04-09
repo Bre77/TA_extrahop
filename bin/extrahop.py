@@ -134,12 +134,12 @@ class Input(Script):
                             ))
                         else:
                             offset += count
-                            ew.log(EventWriter.INFO,"Making another request with offset {}".format(offset))
+                            ew.log(EventWriter.INFO,f"Making another request with offset {offset}")
                             continue
                         ew.log(EventWriter.DEBUG,"Stopping here")
                         break
                     else:
-                        ew.log(EventWriter.WARN,"{} returned status {}".format(EventWriter.INFO,response.url,response.status_code))
+                        ew.log(EventWriter.WARN,f"{response.url} returned status {response.status_code}")
                         ew.log(EventWriter.WARN,response.text)
                         break    
                 
