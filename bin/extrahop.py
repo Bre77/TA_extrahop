@@ -187,7 +187,7 @@ class Input(Script):
                             offset += count
                             ew.log(EventWriter.DEBUG,"Making another detections request with offset {}".format(offset))
                             continue
-                        ew.log(EventWriter.INFO,"Wrote {} events".format(new))
+                        ew.log(EventWriter.INFO,f"Wrote {new} events")
                         break
                     else:
                         ew.log(EventWriter.WARN,"{} returned status {}".format(EventWriter.INFO,response.url,response.status_code))
