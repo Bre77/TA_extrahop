@@ -172,7 +172,8 @@ class Input(Script):
                             # Save the first start_time as the offset for next run if its different
                             open(checkpointfile+"_detections", "w").write(str(events[0]["start_time"]))
                         for event in events:
-                            if event["start_time"] <= lasttime: break
+                            if event["start_time"] <= lasttime:
+                                break
                             new += 1
                             ew.write_event(Event(
                                 time=event["start_time"]/1000,
