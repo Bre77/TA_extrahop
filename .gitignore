@@ -1,5 +1,5 @@
 local
-lib/
+lib/*
 !lib/requirements.txt
 local.meta
 *.spl
