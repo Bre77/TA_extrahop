@@ -1,5 +1,2 @@
+splunk-sdk>=2.1.1,<3
 requests
-certifi
-charset-normalizer
-idna
-urllib3
