@@ -6,7 +6,7 @@ import requests
 from datetime import datetime
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "lib"))
-from splunklib.modularinput import *
+from splunk_input_runtime.modularinput import Argument, Event, EventWriter, Scheme, Script
 
 class Input(Script):
     MASK = "<encrypted>"
@@ -68,7 +68,6 @@ class Input(Script):
 
     def stream_events(self, inputs, ew):
         # Get Variables
-        self.service.namespace['app'] = self.APP
         input_name, input_items = inputs.inputs.popitem()
         kind, name = input_name.split("://")
         checkpointfile = os.path.join(self._input_definition.metadata["checkpoint_dir"], name)
@@ -77,24 +76,14 @@ class Input(Script):
         verify = input_items["verifyssl"] == "1"
 
         # Password Encryption
-        updates = {}
-        
-        for item in ["apikey"]:
-            stored_password = [x for x in self.service.storage_passwords if x.username == item and x.realm == name]
-            if input_items[item] == self.MASK:
-                if len(stored_password) != 1:
-                    ew.log(EventWriter.ERROR,f"Encrypted {item} was not found for {input_name}, reconfigure its value.")
-                    return
-                input_items[item] = stored_password[0].content.clear_password
-            else:
-                if(stored_password):
-                    ew.log(EventWriter.DEBUG,"Removing Current password")
-                    self.service.storage_passwords.delete(username=item,realm=name)
-                ew.log(EventWriter.DEBUG,"Storing password and updating Input")
-                self.service.storage_passwords.create(input_items[item],item,name)
-                updates[item] = self.MASK
-        if(updates):
-            self.service.inputs.__getitem__((name,kind)).update(**updates)
+        secrets = self.context.credentials.protect_input_fields(
+            kind=kind,
+            stanza=name,
+            values=input_items,
+            fields=("apikey",),
+            placeholder=self.MASK,
+        )
+        input_items["apikey"] = secrets["apikey"]
 
         # https://docs.extrahop.com/8.3/rest-api-guide/
         with requests.Session() as session:
@@ -141,9 +130,8 @@ class Input(Script):
                     else:
                         ew.log(EventWriter.WARN,f"{response.url} returned status {response.status_code}")
                         ew.log(EventWriter.WARN,response.text)
-                        break    
-                
-                ew.close()
+                        break
+
                 open(checkpointfile+"_audit", "w").write(str(nextid))
             
             # Detections
@@ -192,8 +180,7 @@ class Input(Script):
                         ew.log(EventWriter.WARN,f"{response.url} returned status {response.status_code}")
                         ew.log(EventWriter.WARN,response.text)
                         break
-                ew.close()
-                
+
 if __name__ == '__main__':
     exitcode = Input().run(sys.argv)
     sys.exit(exitcode)
