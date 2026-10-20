@@ -8,7 +8,7 @@ This file is the project's committed home for project-intrinsic agent knowledge:
 
 - This app runs on `splunk_input_runtime` (https://github.com/Bre77/splunk-input-runtime), not `splunklib`/`splunk-sdk`. `lib/requirements.txt` pins it to an exact commit archive URL with a `sha256:` hash recorded in a comment above it (no PyPI package exists yet, so there is no `==version` line to pin against). Bump both the commit and the recorded hash together when the runtime releases a new version; never point at a branch.
 - `lib/requirements.txt` also lists `requests`; `.build.sh` installs both in one `pip install -t lib -r lib/requirements.txt --no-dependencies` pass.
-- The `chmod` calls at the top of `.build.sh` run *before* the pip install, so they do not cover files pip writes into `lib/`.
+- The `chmod` calls at the top of `.build.sh` run *before* the pip install; a separate `chmod -R a-x+X lib` after it strips execute bits from vendored files (certifi's wheel ships an executable test file that fails AppInspect).
 - CI (`.github/workflows/validate.yml`) calls `Bre77/splunk_nats`'s reusable build+AppInspect workflow in `build_command` mode.
 
 ## Credentials and checkpoints (`bin/extrahop.py`)
